@@ -33,12 +33,12 @@
 #------------------------------------------------------------------------------
 include sources.mk
 
-# Platform Overrides
+
+# Conditional statements to define flags for platform overrides
 ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LD = ld
-	
-	SIZE = size
+		
 	LDFLAGS = -Wl,-Map=$(TARGET).map
         OBJDUMP = objdump	
 endif
@@ -59,41 +59,41 @@ ifeq ($(PLATFORM), MSP432)
 	
 endif
 
-# List of univeral flags
-
+# Universal flags
 TARGET = c1m2
 CPPFLAGS = -E
-CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) 
+CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
 
 
-OBJS = $(SRCS: .C=.O)
+OBJS = $(SRCS: .c=.O)
 %.o : %.c
 	$(CC) -c $< $(CFLAGS) -o $@
 
-PREPROCESS = $(SRCS: .C=.i)
+PREPROCESS = $(SRCS: .c=.i)
 %.i :  %.c
 	$(CC)  $(CPPFLAGS) $< $(CFLAGS) -o $@
 
-ASMB = $(SRCS = .c=.asm)
+ASMB = $(SRCS: .c=.asm)
 %.asm : %.c
 	$(CC) -S $< $(CFLAGS) -o $@
 
-DEPS = $(SRCS = .c=.d)
+DEPS = $(SRCS: .c=.d)
 %.d : %.c
 	$(CC) -M $< $(CFLAGS) -o $@
 
 .PHONY : build
-build: $(TARGET).out
+build: compile-all
 
 .PHONY : compile-all
-compile-all: $(OBJS)
-	$(CC) $(OBJS) -c $(CFLAGS) -o $(TARGET).o
+compile-all: $(TARGET).out
 
 
-$(TARGET).out: $(OBJS) $(DEPS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
-#	$(SIZE) -Atd $(TARGET).out
-#	$(SIZE) $(TARGET).out
+$(TARGET).out: $(OBJS) 
+	$(CC) $(OBJS)  $(CFLAGS) $(LDFLAGS) -o $@  
+	$(SIZE) -Atd $(TARGET).out
+	$(SIZE) $(TARGET).out
+	
+
 
 .PHONY: clean
 clean:
