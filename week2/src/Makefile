@@ -16,10 +16,14 @@
 # Use: make [TARGET] [PLATFORM-OVERRIDES]
 #
 # Build Targets:
-#      compile-all - Compiles all objects but does not link
-#      build - Compiles all object files and link into a final executable
-#      clean - Removes all compiled objects, preprocessed outputs, assembly
-#      	       outputs, executable files and build output files
+#	compile-all  - Compiles all objects but does not link
+#	build 	     - Compiles all object files and link into a final executable
+#	clean 	     - Removes all compiled objects, preprocessed outputs, assembly
+#      	       	       outputs, executable files and build output files.
+#	<FILE>.i     - Generate the preprocessed output of all c-program implementation flags.
+#	<FILE>.asm   - Generate assembly output of c-program implementation files and the final
+#      		       output executable.
+#	<FILE>.o     - Generate the object file for all C-source files without linking.	
 #
 # Platform Overrides:
 #      CPU - cortex-M4
@@ -28,57 +32,72 @@
 #      
 #------------------------------------------------------------------------------
 include sources.mk
-#test
+
 # Platform Overrides
-#define PLATFORM 
-
-ifeq($(PLATFORM), HOST)
-	LINKER_FILE = msp432p401r.lds
-	CPU = cortex-M4
-	ARCH = thumb
-	SPECS = nosys.specs
-
+ifeq ($(PLATFORM), HOST)
 	CC = gcc
-	LD = msp432p401r.lds
-	BASENAME = c1m2
-	TARGET = $(BASENAME).out
-	LDFLAGS = -Wl -Map = $(BASENAME).map
-	CFLAGS = -c -std=c99 -Wall -Werror -g
-	CPPFLAGS = -E  
+	LD = ld
+	
+	SIZE = size
+	LDFLAGS = -Wl,-Map=$(TARGET).map
+        OBJDUMP = objdump	
 endif
 
-ifeq($(PLATFORM), MSP432)
-	LINKER FILE = msp432p401r.lds
+ifeq ($(PLATFORM), MSP432)
+	LINKER_FILE =../msp432p401r.lds
 	CPU = cortex-M4
 	ARCH = thumb
 	SPECS = nosys.spec
 
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	BASENAME = c1m2
-	CFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -Wall
-	LDFLAGS = -Wl -Map=$(BASENAME).map
-	CPPFLAGS = -E
-
+	ARCHFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -march=armv7e-m \
+		    -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	LDFLAGS = -Wl,-Map=$(TARGET).map, -T$(LINKER_FILE)
+	OBJDUMP = arm-none-eabi-objdump
+	SIZE = arm-none-eabi-size
+	
 endif
 
-# List of build targets
+# List of univeral flags
+
+TARGET = c1m2
+CPPFLAGS = -E
+CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) 
+
 
 OBJS = $(SRCS: .C=.O)
-	%.o : %.c
-		$(CC) -c $< $(CFLAGS) -o $@
+%.o : %.c
+	$(CC) -c $< $(CFLAGS) -o $@
+
+PREPROCESS = $(SRCS: .C=.i)
+%.i :  %.c
+	$(CC)  $(CPPFLAGS) $< $(CFLAGS) -o $@
+
+ASMB = $(SRCS = .c=.asm)
+%.asm : %.c
+	$(CC) -S $< $(CFLAGS) -o $@
+
+DEPS = $(SRCS = .c=.d)
+%.d : %.c
+	$(CC) -M $< $(CFLAGS) -o $@
 
 .PHONY : build
+build: $(TARGET).out
 
-build: all
+.PHONY : compile-all
+compile-all: $(OBJS)
+	$(CC) $(OBJS) -c $(CFLAGS) -o $(TARGET).o
 
-.PHONY : all
 
-all: $(TARGET)
+$(TARGET).out: $(OBJS) $(DEPS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+#	$(SIZE) -Atd $(TARGET).out
+#	$(SIZE) $(TARGET).out
 
-$(TARGET) : $(OBJS) 
-	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -O $@
-
+.PHONY: clean
+clean:
+	rm -rf *.asm *.out *.map *.i *.o *.d
 
 
 

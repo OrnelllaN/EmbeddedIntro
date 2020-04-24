@@ -8,17 +8,36 @@
 #
 #*****************************************************************************
 
-ifeq
 # Add your Source files to this variable
-SOURCES = main.c\
-	  memory.c\
-	  interrupts_msp432p401r_gcc.c\
-	  startup_msp432p401r_gcc.c\
-	  system_msp432p401r.c
+SRCS = main.c \
+       memory.c \
+       interrupts_msp432p401r_gcc.c \
+       startup_msp432p401r_gcc.c \
+       system_msp432p401r.c
 
 # Add your include paths to this variable
-INCLUDES = -I./common \
-	   -I./msp432 \
-	   -I./CMSIS
+INCL = -I../common \
+       -I../msp432 \
+       -I../CMSIS
 
+ifeq ($(PLATFORM), MSP432)
+	SRCS = 	main.c \
+	        memory.c \
+	        interrupts_msp432p401r_gcc.c \
+	        startup_msp432p401r_gcc.c \
+	        system_msp432p401r.c
+
+else
+	SRCS = main.c \
+	       memory.c
+
+endif
+
+ifeq ($(PLATFORM), MSP432)
+	INCL = -I../common \
+	       -I../msp432 \
+	       -I../CMSIS
+else
+	INCL = -I../common
+endif
 
