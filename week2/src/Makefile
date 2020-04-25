@@ -79,8 +79,7 @@ PREPROCESS = $(SRCS: .c=.i)
 # the final output executable.
 ASMB = $(SRCS: .c=.asm) 
 %.asm : %.c
-	$(CC) $(CFLAGS) -S $^ -o $@
-	
+	$(CC) -S $^ $(CFLAGS) -o $@
 
 DEPS = $(SRCS: .c=.d)
 %.d : %.c
@@ -98,8 +97,8 @@ $(TARGET).out: $(OBJS)
 $(TARGET).i: $(PREPROCESS)
 	$(CC) $(PREPROCESS) $(CFLAGS) $(CPPFLAGS) 
 
-$(TARGET).asm: $(ASMB)
-	$(CC) $(ASMB) $(CFLAGS)
+$(TARGET).asm: $(TARGET).out
+	$(OBJDUMP) -x $(TARGET).out > $@ 
 
 .PHONY: clean
 clean:
