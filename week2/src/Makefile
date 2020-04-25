@@ -77,9 +77,9 @@ PREPROCESS = $(SRCS: .c=.i)
 
 # Recipe for generating assembly output of c all c programs and
 # the final output executable.
-ASMB = $(SRCS: .asm=.c)
+ASMB = $(SRCS: .c=.asm) 
 %.asm : %.c
-	$(CC) $(ASMB) -S $^ $(CFLAGS) -o $@
+	$(CC) -S $^ $(CFLAGS) -o $@
 	
 
 DEPS = $(SRCS: .d=.c)
@@ -98,6 +98,8 @@ $(TARGET).out: $(OBJS)
 $(TARGET).i: $(PREPROCESS)
 	$(CC) $(PREPROCESS) $(CFLAGS) $(CPPFLAGS) 
 
+$(TARGET).asm: $(TARGET).out
+	$(OBJDUMP) -x $(TARGET).out > $@ 
 
 .PHONY: clean
 clean:
