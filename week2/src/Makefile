@@ -99,7 +99,7 @@ $(TARGET).i: $(PREPROCESS)
 	$(CC) $(PREPROCESS) $(CFLAGS) $(CPPFLAGS) 
 
 $(TARGET).asm: $(TARGET).out
-	$(OBJDUMP) -x $(TARGET).out > $@ 
+	$(OBJDUMP) -D $(TARGET).out > $@ 
 
 .PHONY: clean
 clean:
