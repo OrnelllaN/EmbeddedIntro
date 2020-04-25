@@ -44,7 +44,7 @@ ifeq ($(PLATFORM), HOST)
 endif
 
 ifeq ($(PLATFORM), MSP432)
-	LINKER_FILE =../msp432p401r.lds
+	LINKER_FILE = msp432p401r.lds
 	CPU = cortex-M4
 	ARCH = thumb
 	SPECS = nosys.spec
@@ -65,34 +65,35 @@ CPPFLAGS = -E
 CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
 
 
+# Recipe for generating object files from .c source files
 OBJS = $(SRCS: .c=.O)
 %.o : %.c
-	$(CC) -c $< $(CFLAGS) -o $@
+	$(CC) -c $^ $(CFLAGS) -o $@
 
+# Recipe for generating preprocessed output of all c programs
 PREPROCESS = $(SRCS: .c=.i)
 %.i :  %.c
-	$(CC)  $(CPPFLAGS) $< $(CFLAGS) -o $@
+	$(CC) $(PREPROCESS) $^ $(CFLAGS) $(CPPFLAGS) 
 
-ASMB = $(SRCS: .c=.asm)
+ASMB = $(SRCS: .asm=.c)
 %.asm : %.c
-	$(CC) -S $< $(CFLAGS) -o $@
+	$(CC) -S $^ $(CFLAGS) -o $@
 
-DEPS = $(SRCS: .c=.d)
+DEPS = $(SRCS: .d=.c)
 %.d : %.c
-	$(CC) -M $< $(CFLAGS) -o $@
+	$(CC) -MMD -MF $^ $(CFLAGS) -o $@
 
 .PHONY : build
 build: compile-all
 
 .PHONY : compile-all
-compile-all: $(TARGET).out
-
+compile-all: $(TARGET).out 
 
 $(TARGET).out: $(OBJS) 
-	$(CC) $(OBJS)  $(CFLAGS) $(LDFLAGS) -o $@  
-	$(SIZE) -Atd $(TARGET).out
-	$(SIZE) $(TARGET).out
-	
+	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+
+$(TARGET).i: $(PREPROCESS)
+	$(CC) $(PREPROCESS) $(CFLAGS) $(CPPFLAGS) -o $@
 
 
 .PHONY: clean
