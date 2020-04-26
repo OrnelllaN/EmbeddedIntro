@@ -24,10 +24,10 @@ else
 endif
 
 ifeq ($(PLATFORM), MSP432)
-	INCL = -I./common \
-	       -I./msp432 \
-	       -I./CMSIS
+	INCL = -I../include/common \
+	       -I../include/msp432 \
+	       -I../include/CMSIS
 else
-	INCL = -I./common
+	INCL = -I../include/common
 endif
 

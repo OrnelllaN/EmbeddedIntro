@@ -50,16 +50,16 @@ ifeq ($(PLATFORM), HOST)
 endif
 
 ifeq ($(PLATFORM), MSP432)
-	LINKER_FILE = msp432p401r.lds
+	LINKER_FILE =../msp432p401r.lds
 	CPU = cortex-M4
 	ARCH = thumb
-	SPECS = nosys.spec
+	SPECS = nosys.specs
 
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
 	ARCHFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -march=armv7e-m \
 		    -mfloat-abi=hard -mfpu=fpv4-sp-d16
-	LDFLAGS = -Wl,-Map=$(TARGET).map, -T$(LINKER_FILE)
+	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 	OBJDUMP = arm-none-eabi-objdump
 	SIZE = arm-none-eabi-size
 	
@@ -67,9 +67,8 @@ endif
 
 # Recipe for generating object files from .c source files
 OBJS = $(SRCS:.c=.o)
-
 %.o : %.c
-	$(CC) -c $< $(CFLAGS) -o $@
+	$(CC) $(INCL) -c $< $(CFLAGS) -o $@
 
 # Recipe for generating preprocessed output of all c programs
 PREPROCESS = $(SRCS:.c=.i)
@@ -80,7 +79,7 @@ PREPROCESS = $(SRCS:.c=.i)
 # the final output executable.
 ASMB = $(SRCS:.c=.asm) 
 %.asm : %.c
-	$(CC) -S $< $(CFLAGS) -o $@
+	$(CC) $(INCL) -S $< $(CFLAGS) -o $@
 	
 
 DEPS = $(SRCS:.d=.c)
@@ -95,11 +94,11 @@ compile-all: $(OBJS)
 	$(CC) $(OBJS) $(INCL) -c $(CFLAGS) -o $(TARGET).o
 
 $(TARGET).out: $(OBJS)   
-	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+	$(CC) $(INCL) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
 	$(SIZE) -A -t -d $(TARGET).out
 
 $(TARGET).asm: $(TARGET).out
-	$(CC) $(ASMB) $(CFLAGS) 
+	$(CC) $(INCL) $(ASMB) $(CFLAGS) 
 	$(OBJDUMP) -D $(TARGET).out > $@
 
 
