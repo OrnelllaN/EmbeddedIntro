@@ -81,25 +81,24 @@ ASMB = $(SRCS:.c=.asm)
 %.asm : %.c
 	$(CC) $(INCL) -S $< $(CFLAGS) -o $@
 
-DEPS = $(SRCS: .c=.d)
+
+DEPS = $(SRCS:.c=.d)
 %.d : %.c
-	$(CC) -MMD -MF $< $(CFLAGS) -o $@
+	$(CC) $(INCL) -M $< $(CFLAGS) -o $@
 
 .PHONY : build
-build: $(TARGET).out 
+build: $(TARGET).out $(TARGET).asm
 
 .PHONY : compile-all
 compile-all: $(OBJS) 
 	$(CC) $(OBJS) $(INCL) -c $(CFLAGS) -o $(TARGET).o
-
-$(TARGET).out: $(OBJS)   
-	$(CC) $(INCL) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+	
+$(TARGET).out: $(OBJS) $(DEPS) 
+	$(CC) $(INCL) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 	$(SIZE) -A -t -d $(TARGET).out
 
 $(TARGET).asm: $(TARGET).out
-	$(CC) $(INCL) $(ASMB) $(CFLAGS) 
 	$(OBJDUMP) -D $(TARGET).out > $@
-
 
 .PHONY: clean
 clean:
