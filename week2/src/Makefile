@@ -33,6 +33,11 @@
 #------------------------------------------------------------------------------
 include sources.mk
 
+# Universal flags
+TARGET = c1m2
+CPPFLAGS = -E
+CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
+
 
 # Conditional statements to define flags for platform overrides
 ifeq ($(PLATFORM), HOST)
@@ -59,32 +64,27 @@ ifeq ($(PLATFORM), MSP432)
 	
 endif
 
-# Universal flags
-TARGET = c1m2
-CPPFLAGS = -E
-CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
-
-
 # Recipe for generating object files from .c source files
-OBJS = $(SRCS: .c=.O)
+OBJS = $(SRCS:.c=.o)
+
 %.o : %.c
-	$(CC) -c $^ $(CFLAGS) -o $@
+	$(CC) -c $< $(CFLAGS) -o $@
 
 # Recipe for generating preprocessed output of all c programs
-PREPROCESS = $(SRCS: .c=.i)
-%.i :  %.c
-	$(CC) $(PREPROCESS) $^ $(CFLAGS) $(CPPFLAGS) 
-
-# Recipe for generating assembly output of c all c programs and
+PREPROCESS = $(SRCS:.c=.i)
+%.i : %.c
+	$(CC) $(INCL) $(CPPFLAGS) $< $(CFLAGS) -o $@
+	
+#Recipe for generating assembly output of c all c programs and
 # the final output executable.
-ASMB = $(SRCS: .c=.asm) 
+ASMB = $(SRCS:.c=.asm) 
 %.asm : %.c
-	$(CC) -S $^ $(CFLAGS) -o $@
+	$(CC) -S $< $(CFLAGS) -o $@
 	
 
-DEPS = $(SRCS: .d=.c)
+DEPS = $(SRCS:.d=.c)
 %.d : %.c
-	$(CC) -MMD -MF $^ $(CFLAGS) -o $@
+	$(CC) -MMD -MF $< $(CFLAGS) -o $@
 
 .PHONY : build
 build: compile-all
@@ -92,14 +92,16 @@ build: compile-all
 .PHONY : compile-all
 compile-all: $(TARGET).out 
 
-$(TARGET).out: $(OBJS) 
+$(TARGET).out: $(OBJS)   
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
 
-$(TARGET).i: $(PREPROCESS)
-	$(CC) $(PREPROCESS) $(CFLAGS) $(CPPFLAGS) 
+#$(TARGET).i: $(PREPROCESS)
+#	$(CC) $(PREPROCESS)  $(CFLAGS) $(CPPFLAGS)  
 
 $(TARGET).asm: $(TARGET).out
-	$(OBJDUMP) -D $(TARGET).out > $@ 
+	$(CC) $(ASMB) $(CFLAGS) 
+	$(OBJDUMP) -D $(TARGET).out > $@
+	
 
 .PHONY: clean
 clean:
