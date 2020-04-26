@@ -43,6 +43,7 @@ CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
 ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LD = ld
+	SIZE = size
 		
 	LDFLAGS = -Wl,-Map=$(TARGET).map
         OBJDUMP = objdump	
@@ -93,14 +94,12 @@ compile-all: $(TARGET).out
 
 $(TARGET).out: $(OBJS)   
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
-
-#$(TARGET).i: $(PREPROCESS)
-#	$(CC) $(PREPROCESS)  $(CFLAGS) $(CPPFLAGS)  
+	$(SIZE) -A -t -d $(TARGET).out
 
 $(TARGET).asm: $(TARGET).out
 	$(CC) $(ASMB) $(CFLAGS) 
 	$(OBJDUMP) -D $(TARGET).out > $@
-	
+
 
 .PHONY: clean
 clean:
