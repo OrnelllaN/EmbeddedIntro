@@ -88,10 +88,11 @@ DEPS = $(SRCS:.d=.c)
 	$(CC) -MMD -MF $< $(CFLAGS) -o $@
 
 .PHONY : build
-build: compile-all
+build: $(TARGET).out 
 
 .PHONY : compile-all
-compile-all: $(TARGET).out 
+compile-all: $(OBJS) 
+	$(CC) $(OBJS) $(INCL) -c $(CFLAGS) -o $(TARGET).o
 
 $(TARGET).out: $(OBJS)   
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
