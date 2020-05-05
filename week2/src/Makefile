@@ -36,14 +36,13 @@ include sources.mk
 # Universal flags
 TARGET = c1m2
 CPPFLAGS = -E
-CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
-
 
 # Conditional statements to define flags for platform overrides
 ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LD = ld
 	SIZE = size
+	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM)
 		
 	LDFLAGS = -Wl,-Map=$(TARGET).map
         OBJDUMP = objdump	
@@ -59,6 +58,8 @@ ifeq ($(PLATFORM), MSP432)
 	LD = arm-none-eabi-ld
 	ARCHFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -march=armv7e-m \
 		    -mfloat-abi=hard -mfpu=fpv4-sp-d16
+
+	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 	OBJDUMP = arm-none-eabi-objdump
 	SIZE = arm-none-eabi-size
@@ -75,7 +76,7 @@ PREPROCESS = $(SRCS:.c=.i)
 %.i : %.c
 	$(CC) $(INCL) $(CPPFLAGS) $< $(CFLAGS) -o $@
 	
-#Recipe for generating assembly output of c all c programs and
+# Recipe for generating assembly output of c all c programs and
 # the final output executable.
 ASMB = $(SRCS:.c=.asm) 
 %.asm : %.c
@@ -96,6 +97,7 @@ compile-all: $(OBJS)
 $(TARGET).out: $(OBJS) $(DEPS) 
 	$(CC) $(INCL) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 	$(SIZE) -A -t -d $(TARGET).out
+	$(SIZE) $(TARGET).out
 
 $(TARGET).asm: $(TARGET).out
 	$(OBJDUMP) -D $(TARGET).out > $@
