@@ -1,13 +1,3 @@
-/******************************************************************************
- * Copyright (C) 2017 by Alex Fosdick - University of Colorado
- *
- * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
- * permitted to modify this and use it to learn about the field of embedded
- * software. Alex Fosdick and the University of Colorado are not liable for any
- * misuse of this material. 
- *
- *****************************************************************************/
 /**
  * @file memory.c
  * @brief Abstraction of memory read and write operations
@@ -15,9 +5,6 @@
  * This implementation file provides an abstraction of reading and
  * writing to memory via function calls. There is also a globally
  * allocated buffer array used for manipulation.
- *
- * @author Alex Fosdick
- * @date April 1 2017
  *
  */
 #include "memory.h"
@@ -46,5 +33,30 @@ void set_all(char * ptr, char value, unsigned int size){
 
 void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
+}
+
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
+
+	size_t cnt;
+
+	//Declare temp pointer in case of overlap and allocate space	      //for buffer.
+	uint8_t *temp;
+	temp = (uint8_t *) malloc(sizeof(uint8_t) * length);
+
+	//Copy source contents to temporary array
+	for(cnt=0; cnt < length; cnt++){
+		
+		*(temp + cnt) = *(src + cnt);
+	}
+
+	//Copy from temp array to destination array
+	for(cnt=0; cnt < length; cnt++){
+		
+		*(dst + cnt) = *(temp + cnt);
+	}
+
+	free(temp);
+
+	return dst;
 }
 

@@ -21,7 +21,7 @@ Copyright (C) 2017 by Alex Fosdick - University of Colorado
 
 #include <stdio.h>
 #include "stats.h"
-
+#include "../platform.h"
 
 void main() {
 
@@ -59,6 +59,8 @@ void print_array(unsigned char data[], int size){
 	int i;
 	
 	// Print data in row of 10	
+	
+	#ifdef VERBOSE
 	for (i = 0; i < (SIZE); i++){
 		
 		printf(" %d,", data[i]);
@@ -69,6 +71,7 @@ void print_array(unsigned char data[], int size){
 	}
 
 	printf("\n");
+	#endif
 }
 
 float find_median(unsigned char data[], int size){
@@ -134,13 +137,16 @@ void print_statistics(unsigned char data[], int size){
 	min = find_minimum(data, size);
 	mean = find_mean(data, size);
 	median = find_median(data, size);
+	
+	# Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
+	#ifdef VERBOSE
+		PRINTF("Sorted Array \n");
+		print_array(data, size);
+		PRINTF("\n");
 
-	printf("Sorted Array \n");
-	print_array(data, size);
-	printf("\n");
-
-	printf("Maximum Value is %d\n", max);
-	printf("Minimum Value is %d\n", min);
-       	printf("Median Value is %f\n", median);
-	printf("Mean Value is %d\n", mean);
+		PRINTF("Maximum Value is %d\n", max);
+		PRINTF("Minimum Value is %d\n", min);
+       		PRINTF("Median Value is %f\n", median);
+		PRINTF("Mean Value is %d\n", mean);
+	#endif
 }	
