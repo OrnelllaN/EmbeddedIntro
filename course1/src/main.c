@@ -1,54 +1,24 @@
-/******************************************************************************
- * Copyright (C) 2017 by Alex Fosdick - University of Colorado
- *
- * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
- * permitted to modify this and use it to learn about the field of embedded
- * software. Alex Fosdick and the University of Colorado are not liable for any
- * misuse of this material. 
- *
- *****************************************************************************/
 /**
  * @file main.c
- * @brief Main entry point to the C1M2 Assessment
- *
- * This file contains the main code for the C1M2 assesment. Students
- * are not to change any of the code, they are instead supposed to compile
- * these files with their makefile.
- *
- * @author Alex Fosdick
- * @date April 1 2017
+ * @brief Main entry point to the final assessment for the 
+ * 	  introduction to embedded systems course. It will switch 
+ * 	  which course deliverable can be called based on compile 
+ * 	  time switch commands.
  *
  */
-#include "/home/ornellan/Ngalamulume_Coursera/week2/include/common/platform.h"
-#include "/home/ornellan/Ngalamulume_Coursera/week2/include/common/memory.h"
 
-#define MAX_LENGTH (10)
-char buffer[MAX_LENGTH];
 
-/* A pretty boring main file */
 int main(void) {
-  unsigned int i;
-  char value;
+  
+# Conditional to decide which course deliverable to test.
+  #ifdef defined(COURSE1)
+	#include "course1.h"
+	
+	# call function in course1.c to begin testing.
+	int8_t course1();
 
-  /* Code below does some arbitrary memory Reads & writes */
-  clear_all(buffer, MAX_LENGTH);
-  set_all( ( buffer + 8 ), 43, 2); 
-  set_value(buffer, 0, 0x61);
-  value = get_value(buffer, 9);
-  set_value(buffer, 9, (value + 0x27));
-  set_value(buffer, 3, 0x37);
-  set_value(buffer, 1, 88);
-  set_value(buffer, 4, '2');
-  value = get_value(buffer, 1);
-  set_value(buffer, 2, 121);
-  set_value(buffer, 7, (value - 12));
-  set_value(buffer, 5, 0x5F);
-
-  for ( i = 0; i < MAX_LENGTH; i++ ){
-    PRINTF("%c", buffer[i]);
-  }
-  PRINTF("\n");
+  #else
+	#error		
   return 0;
 }
 
