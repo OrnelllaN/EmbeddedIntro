@@ -7,18 +7,18 @@
  *
  */
 
+#include <stdint.h>
 
 int main(void) {
   
-# Conditional to decide which course deliverable to test.
-  #ifdef defined(COURSE1)
-	#include "course1.h"
+// Conditional to decide which course deliverable to test.
+  #if defined(COURSE1)
+	#include "../include/common/course1.h"
 	
-	# call function in course1.c to begin testing.
-	int8_t course1();
-
-  #else
-	#error		
+	// call function in course1.c to begin testing.
+	void course1();
+		
+  #endif
   return 0;
 }
 

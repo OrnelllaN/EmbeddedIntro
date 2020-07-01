@@ -13,13 +13,19 @@
 ifeq ($(PLATFORM), MSP432)
 	SRCS = 	main.c \
 	        memory.c \
+		course1.c \
+		stats.c \
+		data.c \
 	        interrupts_msp432p401r_gcc.c \
 	        startup_msp432p401r_gcc.c \
 	        system_msp432p401r.c
 
 else
 	SRCS = main.c \
-	       memory.c
+	       memory.c \
+	       course1.c \
+               stats.c \
+               data.c \
 
 endif
 

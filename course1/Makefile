@@ -34,22 +34,23 @@
 include sources.mk
 
 # Universal flags
-TARGET = c1m2
+TARGET = c1m4
 CPPFLAGS = -E
+VPATH = src: include:../common : include:../msp432 : include:../CMSIS
 
 # Conditional statements to define flags for platform overrides
 ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LD = ld
 	SIZE = size
-	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM)
+	CFLAGS = -O0 -std=c99 -g -D$(PLATFORM) -D$(FUNCTION) -D$(PRINTOUT)
 		
 	LDFLAGS = -Wl,-Map=$(TARGET).map
         OBJDUMP = objdump	
 endif
 
 ifeq ($(PLATFORM), MSP432)
-	LINKER_FILE =../msp432p401r.lds
+	LINKER_FILE = msp432p401r.lds
 	CPU = cortex-M4
 	ARCH = thumb
 	SPECS = nosys.specs
@@ -59,7 +60,7 @@ ifeq ($(PLATFORM), MSP432)
 	ARCHFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -march=armv7e-m \
 		    -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
-	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
+	CFLAGS = -O0 -std=c99 -g -D$(PLATFORM) $(ARCHFLAGS)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 	OBJDUMP = arm-none-eabi-objdump
 	SIZE = arm-none-eabi-size

@@ -20,19 +20,8 @@ Copyright (C) 2017 by Alex Fosdick - University of Colorado
 
 
 #include <stdio.h>
-#include "stats.h"
-#include "../platform.h"
-
-void main() {
-
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114, 88,   45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-
-  print_statistics(test, SIZE);
-}
+#include "../include/common/stats.h"
+#include "../include/common/platform.h"
 
 	
 void sort_array(unsigned char data[], int size){
@@ -138,7 +127,7 @@ void print_statistics(unsigned char data[], int size){
 	mean = find_mean(data, size);
 	median = find_median(data, size);
 	
-	# Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
+	// Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
 	#ifdef VERBOSE
 		PRINTF("Sorted Array \n");
 		print_array(data, size);

@@ -7,7 +7,10 @@
  * allocated buffer array used for manipulation.
  *
  */
-#include "memory.h"
+#include "../include/common/memory.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /***********************************************************
  Function Definitions
@@ -60,3 +63,73 @@ uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
 	return dst;
 }
 
+
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length){
+	
+	while(length){
+		
+		*(dst++) = *(src++);
+		length--;
+	}
+
+	return dst;
+}
+
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value){
+	
+	while(length){
+		
+		*(src++) = value;
+		length--;
+	}
+
+	return src;
+}
+
+uint8_t * my_memzero(uint8_t * src, size_t length){
+	
+	while(length){
+
+                *(src++) = 0;
+                length--;
+        }
+	
+	return src;
+}
+
+uint8_t * my_reverse(uint8_t * src, size_t length){
+	
+	size_t incr;
+	uint8_t * endsrc, *start_src, temp;
+
+	endsrc = src;
+	start_src = src;
+
+	//Get endsrc ptr to end of string
+	for(incr=0; incr<length-1; incr++)
+		endsrc++;
+
+	// Swap values at end of string with values at the beginning
+	for(incr=0; incr<(length-1)/2; incr++){
+		
+		temp = *endsrc;
+		*endsrc = *start_src;
+		*start_src = temp;
+
+		start_src++;
+		endsrc++;
+	}
+		
+	return src;
+}
+
+uint8_t * reserve_words(size_t length){
+	
+	uint8_t * reserve;
+	reserve = (uint8_t *) malloc(sizeof(uint8_t));
+}
+
+void free_words(int32_t * src){
+	
+	free(src);
+}
