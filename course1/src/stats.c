@@ -19,14 +19,13 @@ Copyright (C) 2017 by Alex Fosdick - University of Colorado
 
 
 
-#include <stdio.h>
 #include "../include/common/stats.h"
 #include "../include/common/platform.h"
 
 	
 void sort_array(unsigned char data[], int size){
 	
-	int round, compare, temp, i;
+	int round, compare, temp;
 
 		for (round = 0; round < (SIZE); round++){
 		
@@ -49,18 +48,18 @@ void print_array(unsigned char data[], int size){
 	
 	// Print data in row of 10	
 	
-	#ifdef VERBOSE
+//	#ifdef VERBOSE
 	for (i = 0; i < (SIZE); i++){
 		
 		printf(" %d,", data[i]);
 		if ((i %  10 == 0) && ( i != 0)){
 		
-			printf("\n");
+		     PRINTF("\n");
 		}	
 	}
 
 	printf("\n");
-	#endif
+//	#endif
 }
 
 float find_median(unsigned char data[], int size){
@@ -128,7 +127,7 @@ void print_statistics(unsigned char data[], int size){
 	median = find_median(data, size);
 	
 	// Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
-	#ifdef VERBOSE
+//	#ifdef VERBOSE
 		PRINTF("Sorted Array \n");
 		print_array(data, size);
 		PRINTF("\n");
@@ -137,5 +136,5 @@ void print_statistics(unsigned char data[], int size){
 		PRINTF("Minimum Value is %d\n", min);
        		PRINTF("Median Value is %f\n", median);
 		PRINTF("Mean Value is %d\n", mean);
-	#endif
+//	#endif
 }	

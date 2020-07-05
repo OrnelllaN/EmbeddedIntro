@@ -8,6 +8,7 @@
  */
 
 #include <stdint.h>
+#include "../include/common/platform.h"
 
 int main(void) {
   
@@ -15,9 +16,10 @@ int main(void) {
   #if defined(COURSE1)
 	#include "../include/common/course1.h"
 	
+	PRINTF("------------ IN MAIN --------------\n");	
 	// call function in course1.c to begin testing.
-	void course1();
-		
+	course1();
+	PRINTF("----------- OUT OF MAIN -----------\n");	
   #endif
   return 0;
 }

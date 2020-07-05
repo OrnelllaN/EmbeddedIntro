@@ -176,7 +176,7 @@ uint8_t * my_reverse(uint8_t * src, size_t length);
  * 
  */
 
-uint8_t * reserve_words(size_t length);
+int32_t * reserve_words(size_t length);
 
 /**
  * @brief Free dynamic memory
