@@ -44,7 +44,7 @@ ifeq ($(PLATFORM), HOST)
 	CC = gcc
 	LD = ld
 	SIZE = size
-	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) -D$(COURSE)
+	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) -D$(COURSE) -D$(DEBUGPRINT)
 		
 	LDFLAGS = -Wl,-Map=$(TARGET).map
         OBJDUMP = objdump	
@@ -61,7 +61,7 @@ ifeq ($(PLATFORM), MSP432)
 	ARCHFLAGS = -mcpu=$(CPU) -m$(ARCH) --specs=$(SPECS) -march=armv7e-m \
 		    -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
-	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS)
+	CFLAGS = -O0 -std=c99 -Wall -Werror -g -D$(PLATFORM) $(ARCHFLAGS) -D$(DEBUGPRINT) -D$(COURSE)
 	LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
 	OBJDUMP = arm-none-eabi-objdump
 	SIZE = arm-none-eabi-size

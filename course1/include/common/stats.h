@@ -53,7 +53,7 @@ void sort_array(unsigned char data[], int size);
  * @return, no data returned.
  */
 
-void print_array(unsigned char data[], int size);
+void print_array(unsigned char * data, int size);
 
 /**
  * @brief Finds the median of a given data set.

@@ -19,18 +19,15 @@
 void set_value(char * ptr, unsigned int index, char value){
   ptr[index] = value;
 
-  PRINTF(" Set Value PASSED\n");
 }
 
 void clear_value(char * ptr, unsigned int index){
   set_value(ptr, index, 0);
-  PRINTF(" Clear Value PASSED\n");
 }
 
 char get_value(char * ptr, unsigned int index){
 	
-      PRINTF(" Get Value PASSED\n");
-      return ptr[index];
+     return ptr[index];
 }
 
 void set_all(char * ptr, char value, unsigned int size){
@@ -39,14 +36,11 @@ void set_all(char * ptr, char value, unsigned int size){
     set_value(ptr, i, value);
   }
 
-  PRINTF(" Set all PASSED\n");
-
 }
 
 void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
 
-  PRINTF(" Clear all PASSED\n");
 }
 
 uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
@@ -56,17 +50,14 @@ uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
 	//Declare temp pointer in case of overlap and allocate space	      //for buffer.
 	uint8_t *temp;
 
-	PRINTF("In my-memmove, about to allocate memory\n");
 	temp = (uint8_t*)malloc(sizeof(uint8_t) * length);
 	
-	PRINTF("Copying from source to temp array\n");
 	//Copy source contents to temporary array
 	for(cnt=0; cnt < length; cnt++){
 		
 		*(temp + cnt) = *(src + cnt);
 	}
 	
-	PRINTF("Copy from temp to destination array\n");
 	//Copy from temp array to destination array
 	for(cnt=0; cnt < length; cnt++){
 		
@@ -75,8 +66,6 @@ uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length){
 
 	free(temp);
 	
-	PRINTF(" My memmove PASSED\n");
-
 	return dst;
 }
 
@@ -116,25 +105,15 @@ uint8_t * my_memzero(uint8_t * src, size_t length){
 
 uint8_t * my_reverse(uint8_t * src, size_t length){
 	
-	size_t incr;
-	uint8_t * endsrc, *start_src, temp;
-
-	endsrc = src;
-	start_src = src;
-
-	//Get endsrc ptr to end of string
-	for(incr=0; incr<length-1; incr++)
-		endsrc++;
+	uint8_t incr;
+	int32_t temp;
 
 	// Swap values at end of string with values at the beginning
-	for(incr=0; incr<(length-1)/2; incr++){
+	for(incr=0; incr<= (length-1)/2; incr++){
 		
-		temp = *endsrc;
-		*endsrc = *start_src;
-		*start_src = temp;
-
-		start_src++;
-		endsrc++;
+		temp = *(src+incr);
+		*(src+incr) = *(src+length-incr-1);
+		*(src+length-incr-1) = temp;
 	}
 		
 	return src;

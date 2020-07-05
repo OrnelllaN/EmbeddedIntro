@@ -41,11 +41,13 @@ int8_t test_data1() {
 
   digits = my_itoa( num, ptr, BASE_16);   
   value = my_atoi( ptr, digits, BASE_16);
-//  #if defined(VERBOSE)
+
+  #if defined(ENABLE)
   PRINTF("\ntest_data1();\n");
   PRINTF("  Initial number: %d\n", num);
   PRINTF("  Final Decimal number: %d\n", value);
-//  #endif
+  #endif
+
   free_words( (int32_t*)ptr );
 
   if ( value != num )
@@ -71,10 +73,12 @@ int8_t test_data2() {
 
   digits = my_itoa( num, ptr, BASE_10);
   value = my_atoi( ptr, digits, BASE_10);
- // #ifdef VERBOSE
+ 
+  #if defined(ENABLE)
   PRINTF("  Initial Decimal number: %d\n", num);
   PRINTF("  Final Decimal number: %d\n", value);
- // #endif
+  #endif
+
   free_words( (int32_t*)ptr );
 
   if ( value != num )
@@ -96,8 +100,7 @@ int8_t test_memmove1() {
 
   if (! set ) 
   {
-    	PRINTF(" SET Not SUccessful\n");
-	return TEST_ERROR;
+    	return TEST_ERROR;
   }
   
   ptra = &set[0];
@@ -111,10 +114,7 @@ int8_t test_memmove1() {
 
   print_array(set, MEM_SET_SIZE_B);
 
-  PRINTF("Finished Printing First Array\n");
-
   my_memmove(ptra, ptrb, TEST_MEMMOVE_LENGTH);
-  PRINTF("Finished calling my_memmove\n");
 
   print_array(set, MEM_SET_SIZE_B);
 
@@ -125,12 +125,9 @@ int8_t test_memmove1() {
       ret = TEST_ERROR;
     }
   }
- 
-  PRINTF("About to free words\n");
 
   free_words( (int32_t*)set );
 
-  PRINTF(" ---------------- END of MEMMOVE1 ----------\n");
   return ret;
 }
 
@@ -220,7 +217,6 @@ int8_t test_memcopy() {
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memcopy()\n");
   set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
 
   if (! set ) 
@@ -259,7 +255,6 @@ int8_t test_memset()
   uint8_t * ptra;
   uint8_t * ptrb;
 
-  PRINTF("test_memset()\n");
   set = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
   if (! set )
   {
@@ -297,8 +292,8 @@ int8_t test_memset()
   return ret;
 }
 
-int8_t test_reverse()
-{
+int8_t test_reverse(){
+
   uint8_t i;
   int8_t ret = TEST_NO_ERROR;
   uint8_t * copy;
@@ -308,7 +303,7 @@ int8_t test_reverse()
                                  0x20, 0x24, 0x7C, 0x20, 0x24, 0x69, 0x68, 0x54
                                };
 
-  PRINTF("test_reverse()\n");
+
   copy = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
   if (! copy )
   {
@@ -342,30 +337,15 @@ void course1(void)
   int8_t failed = 0;
   int8_t results[TESTCOUNT];
 
- // results[0] = test_data1();
-  PRINTF(" In course1 function of course1 TEST DATA1 PASSED\n");
-
- // results[1] = test_data2();
-  PRINTF(" In course1 function of course1 TEST DATA2 PASSED\n");
-
+  results[0] = test_data1();
+  results[1] = test_data2();
   results[2] = test_memmove1();
-  PRINTF(" In course1 function of course1 TEST MEMMOVE1 PASSED\n");
-
-//  results[3] = test_memmove2();
-  PRINTF(" In course1 function of course1 TEST MEMMOVE2 PASSED\n");
-
- // results[4] = test_memmove3();
-  PRINTF(" In course1 function of course1 TEST MEMMOVE3 PASSED\n");
-
- // results[5] = test_memcopy();
-  PRINTF(" In course1 function of course1 TEST MEMCOPY PASSED\n");
-
- // results[6] = test_memset();
-  PRINTF(" In course1 function of course1 TEST MEMSET PASSED\n");
-
- // results[7] = test_reverse();
-  PRINTF(" In course1 function of course1 TEST REVERSE PASSED\n");
-
+  results[3] = test_memmove2();
+  results[4] = test_memmove3();
+  results[5] = test_memcopy();
+  results[6] = test_memset();
+  results[7] = test_reverse();
+ 
   for ( i = 0; i < TESTCOUNT; i++) 
   {
     failed += results[i];

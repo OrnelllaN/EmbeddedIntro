@@ -15,11 +15,8 @@ int main(void) {
 // Conditional to decide which course deliverable to test.
   #if defined(COURSE1)
 	#include "../include/common/course1.h"
-	
-	PRINTF("------------ IN MAIN --------------\n");	
 	// call function in course1.c to begin testing.
 	course1();
-	PRINTF("----------- OUT OF MAIN -----------\n");	
   #endif
   return 0;
 }

@@ -21,7 +21,7 @@ Copyright (C) 2017 by Alex Fosdick - University of Colorado
 
 #include "../include/common/stats.h"
 #include "../include/common/platform.h"
-
+#include <stdint.h>
 	
 void sort_array(unsigned char data[], int size){
 	
@@ -42,16 +42,15 @@ void sort_array(unsigned char data[], int size){
 		}
 }
 
-void print_array(unsigned char data[], int size){
+void print_array(unsigned char * data, int size){
 	
-	int i;
-	
+
 	// Print data in row of 10	
 	
-//	#ifdef VERBOSE
-	for (i = 0; i < (SIZE); i++){
+	#if defined(ENABLE)
+	for (int i = 0; i < (SIZE); i++){
 		
-		printf(" %d,", data[i]);
+		PRINTF(" %d,", data[i]);
 		if ((i %  10 == 0) && ( i != 0)){
 		
 		     PRINTF("\n");
@@ -59,7 +58,7 @@ void print_array(unsigned char data[], int size){
 	}
 
 	printf("\n");
-//	#endif
+	#endif
 }
 
 float find_median(unsigned char data[], int size){
@@ -116,25 +115,17 @@ int find_maximum(unsigned char data[], int size){
 
 void print_statistics(unsigned char data[], int size){
 
-	int max, min, mean;
-	float median;
-	
 	sort_array(data, size);
 
-	max = find_maximum(data, size);
-	min = find_minimum(data, size);
-	mean = find_mean(data, size);
-	median = find_median(data, size);
-	
 	// Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
-//	#ifdef VERBOSE
+	#if defined(ENABLE)
 		PRINTF("Sorted Array \n");
 		print_array(data, size);
 		PRINTF("\n");
 
-		PRINTF("Maximum Value is %d\n", max);
-		PRINTF("Minimum Value is %d\n", min);
-       		PRINTF("Median Value is %f\n", median);
-		PRINTF("Mean Value is %d\n", mean);
-//	#endif
+		PRINTF("Maximum Value is %d\n", find_maximum(data, size));
+		PRINTF("Minimum Value is %d\n", find_minimum(data, size));
+       		PRINTF("Median Value is %f\n", find_median(data, size));
+		PRINTF("Mean Value is %d\n", find_mean(data, size));
+	#endif
 }	
