@@ -57,7 +57,7 @@ void print_array(unsigned char * data, int size){
 		}	
 	}
 
-	printf("\n");
+	PRINTF("\n");
 	#endif
 }
 

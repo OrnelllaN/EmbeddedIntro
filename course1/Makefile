@@ -51,7 +51,7 @@ ifeq ($(PLATFORM), HOST)
 endif
 
 ifeq ($(PLATFORM), MSP432)
-	LINKER_FILE =../msp432p401r.lds
+	LINKER_FILE = msp432p401r.lds
 	CPU = cortex-M4
 	ARCH = thumb
 	SPECS = nosys.specs
