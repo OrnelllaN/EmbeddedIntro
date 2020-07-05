@@ -219,14 +219,14 @@ typedef enum IRQn
 /* disable the TI ULP advisor check for the core header file definitions */
 #pragma diag_push
 #pragma CHECK_ULP("none")
-#include "core_cm4.h"
+#include "../CMSIS/core_cm4.h"
 #pragma diag_pop
 #else
-#include "core_cm4.h"
+#include "../CMSIS/core_cm4.h"
 #endif
 
 /* System Header */
-#include "system_msp432p401r.h"
+#include "../msp432/system_msp432p401r.h"
 
 /******************************************************************************
 * Definition of standard bits                                                 *

@@ -19,25 +19,13 @@ Copyright (C) 2017 by Alex Fosdick - University of Colorado
 
 
 
-#include <stdio.h>
-#include "stats.h"
-#include "../platform.h"
-
-void main() {
-
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114, 88,   45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-
-  print_statistics(test, SIZE);
-}
-
+#include "../include/common/stats.h"
+#include "../include/common/platform.h"
+#include <stdint.h>
 	
 void sort_array(unsigned char data[], int size){
 	
-	int round, compare, temp, i;
+	int round, compare, temp;
 
 		for (round = 0; round < (SIZE); round++){
 		
@@ -54,23 +42,22 @@ void sort_array(unsigned char data[], int size){
 		}
 }
 
-void print_array(unsigned char data[], int size){
+void print_array(unsigned char * data, int size){
 	
-	int i;
-	
+
 	// Print data in row of 10	
 	
-	#ifdef VERBOSE
-	for (i = 0; i < (SIZE); i++){
+	#if defined(ENABLE)
+	for (int i = 0; i < (SIZE); i++){
 		
-		printf(" %d,", data[i]);
+		PRINTF(" %d,", data[i]);
 		if ((i %  10 == 0) && ( i != 0)){
 		
-			printf("\n");
+		     PRINTF("\n");
 		}	
 	}
 
-	printf("\n");
+	PRINTF("\n");
 	#endif
 }
 
@@ -128,25 +115,17 @@ int find_maximum(unsigned char data[], int size){
 
 void print_statistics(unsigned char data[], int size){
 
-	int max, min, mean;
-	float median;
-	
 	sort_array(data, size);
 
-	max = find_maximum(data, size);
-	min = find_minimum(data, size);
-	mean = find_mean(data, size);
-	median = find_median(data, size);
-	
-	# Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
-	#ifdef VERBOSE
+	// Only prints results if verbose outputs is requested through -DVERBOSE on the cmd line
+	#if defined(ENABLE)
 		PRINTF("Sorted Array \n");
 		print_array(data, size);
 		PRINTF("\n");
 
-		PRINTF("Maximum Value is %d\n", max);
-		PRINTF("Minimum Value is %d\n", min);
-       		PRINTF("Median Value is %f\n", median);
-		PRINTF("Mean Value is %d\n", mean);
+		PRINTF("Maximum Value is %d\n", find_maximum(data, size));
+		PRINTF("Minimum Value is %d\n", find_minimum(data, size));
+       		PRINTF("Median Value is %f\n", find_median(data, size));
+		PRINTF("Mean Value is %d\n", find_mean(data, size));
 	#endif
 }	
